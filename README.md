@@ -2,7 +2,7 @@
 
 <em>Welcome to the Catalog website!</em>
 
-Using this repository, you can access a client-side website which allows you to create categories and items for them. Categories and assocated Items have CRUD functionality (they can be Created, Read, Updated, and Destroyed). This site uses google OAuth2.0 as a third party authenticator, so you must either create or possess a google account in order to register as a user for this site.
+Using this repository, you can access a client-side website which allows you to create categories, and items for those categories. Categories and assocated Items have CRUD functionality (they can be Created, Read, Updated, and Destroyed). This site uses google OAuth2.0 as a third party authenticator, so you must either create or possess a google account in order to register as a user for this site.
 
 <em>::SETTING UP::</em>
 
