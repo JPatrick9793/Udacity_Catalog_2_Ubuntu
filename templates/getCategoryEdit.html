@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>A Pen by  John Conway</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+  <header class="header_container">
+    <h1 class="header_item" id="logo">CATALOG</h1>
+    <h3 class="header_item" id="header_description">Create, Read, Update, and <span class="fire">DESTROY</span> your own Items</h3></header>
+  <nav class="nav_container">
+    <a href='{{ url_for('getLogin') }}' class="nav_item">Login</a>  
+    <a href='{{ url_for('gdisconnect') }}' class="nav_item">Logout</a>
+    <a href='#' class="nav_item gandalf">GANDALF</a></nav>
+  <div class="body_wrapper">
+    <aside>
+      <header class="aside_item aside_head">
+        CATEGORIES:</header>
+      <form class="aside_form" action = '{{ url_for('getCreateCategory', user_id = login_session['user_id']) }}' method = 'post'>
+        <div class="aside_item">
+          <p>New Category:</p></div>
+        <div class="aside_item">
+          <input type ='text' size='25' name='name' placeholder='Name'></div>
+        <div class="aside_item">
+          <input type='submit' value='Submit'></div></form>
+
+        {% for i in categories %}
+        <a href='{{ url_for('getItems', user_id=login_session['user_id'], category_id=i.id) }}' class="aside_item aside_link">{{i.name}}</a>
+        {% endfor %}
+
+        <header class="aside_item aside_head">
+          ITEMS WITHIN {{cat.name}}:
+        </header>
+        <form class="aside_form" action = '{{ url_for('getCreateItem', user_id=login_session['user_id'], category_id=cat.id) }}' method = 'post'>
+        <div class="aside_item">
+          <p>New Item:</p></div>
+        <div class="aside_item">
+          <input type ='text' size='25' name='name' placeholder='Name'></div>
+        <div class="aside_item">
+          <input type ='text' size='25' name='description' placeholder='Description'></div>
+        <div class="aside_item">
+          <input type='submit' value='Submit'></div></form>
+        {% for item in items %}
+        <a href='{{ url_for('getItemInfo', user_id=login_session['user_id'], category_id=cat.id, item_id=item.id) }}' class="aside_item aside_link">{{item.name}}</a>
+        {% endfor %}</aside> 
+    <div class="body_container">
+      <div class="body_item box">
+        <p>Current Category: {{cat.name}}</p>
+        <form action='{{ url_for('getCategoryEdit', user_id=login_session['user_id'], category_id=cat.id) }}' method='post'>
+          <p>New Name: <input type="text" name='name' placeholder='{{ cat.name }}'><input type='submit' name='Submit'></p><br>
+          
+        </form>
+      </div>
+    </div></div>
+
+<footer class="footer_container" id="footer">
+  <div class="footer_item">By: John Conway</div>
+  <div class="footer_item">
+    <a href="http://jigsaw.w3.org/css-validator/check/referer">
+      <img src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!"/></a></div></footer></body></html>
+    
+  
+
+  
+  
+
+

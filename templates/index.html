@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>A Pen by  John Conway</title>
+  
+  
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+  <header class="header_container">
+  <h1 class="header_item" id="logo">CATALOG</h1>
+  <h3 class="header_item" id="header_description">Create, Read, Update, and DESTROY your own Items</h3>
+</header>
+
+<nav class="nav_container">
+  <a href='{{ url_for('getLogin') }}' class="nav_item">Login</a>
+  
+  <a href='{{ url_for('gdisconnect') }}' class="nav_item">Logout</a>
+  
+  <a href='#' class="nav_item gandalf">GANDALF</a>
+</nav>
+
+<div class="body_wrapper">
+  <aside>
+    <header class="aside_item aside_head">
+    CATEGORIES:
+    </header>
+  
+  <form class="aside_form" action = "#" method = 'post'>
+    <div class="aside_item">
+      <p>New Category:</p>
+    </div>
+    
+    <div class="aside_item">
+      <input type ='text' size='25' name='name' placeholder='Name'>
+    </div>
+    
+    <div class="aside_item">
+      <input type='submit' value='Submit'>
+    </div>
+  </form>
+  
+  <a href="#" class="aside_item aside_link">aside item 2 testing long lines</a>
+  
+  <a href="#" class="aside_item aside_link">aside item 3</a>
+  
+  <a href="#" class="aside_item aside_link">aside item 4</a>
+  
+  <header class="aside_item aside_head">
+    ITEMS:
+  </header>
+  
+  <a href="#" class="aside_item aside_link">aside item 2 testing long lines</a>
+  
+  <a href="#" class="aside_item aside_link">aside item 3</a>
+  
+  <a href="#" class="aside_item aside_link">aside item 4</a> 
+</aside> 
+  
+  <div class="body_container"> 
+    <div class="body_item box">
+    <h3>
+      SELECTED ITEM INFO:
+    </h3>
+      <p>Name:</p>
+      <p>Description:</p>
+      <a href='#'>EDIT</a> |
+      <a href='#'>DELETE</a> |
+      <a href='#'>JSON</a>
+      
+  </div>
+  </div>
+  </div>
+
+<footer class="footer_container" id="footer">
+  <div class="footer_item"> By: John Conway   </div>
+  <div class="footer_item">
+    <a href="http://jigsaw.w3.org/css-validator/check/referer">
+      <img src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!"/>
+    </a>
+  </div>
+</footer>
+  
+  
+</body>
+</html>
