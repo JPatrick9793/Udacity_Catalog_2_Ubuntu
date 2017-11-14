@@ -21,8 +21,8 @@ $  pip install -Iv sqlalchemy==1.1.13
 <em>::TO RUN THE PROGRAM::</em>
 <ol>
 <li>Open the terminal and navigate to the catalog_2 folder</li>
-<li>Enter the following command in the prompt line:<li>$  python server.py</li></li>
-<li>open your browser and visit the following url:<li>http://localhost:800/</li></li>
+<li>Enter the following command in the prompt line:<br>$  python server.py</li>
+<li>open your browser and visit the following url:<br>http://localhost:800/</li>
 <li>Sign in using a google account (Create one if necessary)</li>
 <li>Enjoy!</li>
 </ol>
