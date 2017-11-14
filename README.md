@@ -16,6 +16,7 @@ The site should be run using the following configuration:
 Flask and sqlalchemy can be downloaded using the pip command from the python terminal:
 
 $  pip install -Iv Flask==0.9
+<br>
 $  pip install -Iv sqlalchemy==1.1.13
 
 <em>::TO RUN THE PROGRAM::</em>
