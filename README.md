@@ -1,4 +1,5 @@
 # Udacity_Catalog_2
+**Part of the Udacity Fullstack Nanodegree program. Credit goes to Udacity for certain code segments and methods derived therein.
 
 <em>Welcome to the Catalog website!</em>
 
