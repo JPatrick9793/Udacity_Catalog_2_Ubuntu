@@ -59,7 +59,7 @@ def getGandalf():
 def determineHome():
     # if there is a login session
     if login_session['user_id']:
-        return redirect(url_for('getHomeLoggedIn', 
+        return redirect(url_for('getHomeLoggedIn',
                                 user_id=login_session['user_id']
                                 ))
     else:
@@ -96,7 +96,7 @@ def getCreateCategory(user_id):
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
-    # query user from db    
+    # query user from db
     user = session.query(User).filter_by(id=login_session['user_id'])
     newCategory = Category(
         name=request.form['name'],
@@ -109,7 +109,8 @@ def getCreateCategory(user_id):
 
 
 # change name of a category
-@app.route('/catalog/<int:user_id>/<int:category_id>/edit', methods=['GET', 'POST'])
+@app.route('/catalog/<int:user_id>/<int:category_id>/edit',
+           methods=['GET', 'POST'])
 def getCategoryEdit(user_id, category_id):
     users = session.query(User).all()
     items = session.query(Item).filter_by(category=category_id).all()
@@ -127,16 +128,16 @@ def getCategoryEdit(user_id, category_id):
                                 ))
     if request.method == 'GET':
         return render_template('getCategoryEdit.html',
-                          categories=categories,
-                          users=users,
-                          login_session=login_session,
-                          items=items,
-                          cat=category,
-                          )
+                               categories=categories,
+                               users=users,
+                               login_session=login_session,
+                               items=items,
+                               cat=category)
 
 
 # delete category and all associated items
-@app.route('/catalog/<int:user_id>/<int:category_id>/delete', methods=['GET', 'POST'])
+@app.route('/catalog/<int:user_id>/<int:category_id>/delete',
+           methods=['GET', 'POST'])
 def getCategoryDelete(user_id, category_id):
     users = session.query(User).all()
     items = session.query(Item).filter_by(category=category_id).all()
@@ -147,12 +148,11 @@ def getCategoryDelete(user_id, category_id):
         return redirect(url_for('getGandalf'))
     if request.method == 'GET':
         return render_template('getCategoryDelete.html',
-                          categories=categories,
-                          users=users,
-                          login_session=login_session,
-                          items=items,
-                          cat=category,
-                          )
+                               categories=categories,
+                               users=users,
+                               login_session=login_session,
+                               items=items,
+                               cat=category)
     if request.method == 'POST':
         for i in items:
             session.delete(i)
@@ -189,7 +189,7 @@ def getCategoryJSON(user_id, category_id):
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
-    return jsonify( items = [i.serialize for i in items])
+    return jsonify(items=[i.serialize for i in items])
 
 
 # route for post request for new item form on aside bar
@@ -238,7 +238,8 @@ def getItemInfo(user_id, category_id, item_id):
 
 
 # clicking edit from the getItemInfo uri will redirect here
-@app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/edit', methods=['GET', 'POST'])
+@app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/edit',
+           methods=['GET', 'POST'])
 def getItemEdit(user_id, category_id, item_id):
     users = session.query(User).all()
     items = session.query(Item).filter_by(category=category_id).all()
@@ -271,7 +272,8 @@ def getItemEdit(user_id, category_id, item_id):
 
 
 # clicking delete from the getItemInfo uri will redirect here
-@app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/delete', methods=['GET', 'POST'])
+@app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/delete',
+           methods=['GET', 'POST'])
 def getItemDelete(user_id, category_id, item_id):
     users = session.query(User).all()
     items = session.query(Item).filter_by(category=category_id).all()

@@ -32,44 +32,42 @@ class User(Base):
 
 # create category table
 class Category(Base):
-  __tablename__ = 'category'
-  id=Column(Integer, primary_key=True)
-  name=Column(String(15))
-  user_id=Column(Integer, ForeignKey('user.id'))
-  user=relationship(User)
+    __tablename__ = 'category'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(15))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
-  # to return JSON format
-  @property
-  def serialize(self):
-      return {
-             'name': self.name,
-             'user_id': self.user_id,
-             }
+    # to return JSON format
+    @property
+    def serialize(self):
+        return {
+               'name': self.name,
+               'user_id': self.user_id,
+               }
 
 
 # create item table
 class Item(Base):
-  __tablename__ = 'item'
-  id=Column(Integer, primary_key=True)
-  user_id=Column(Integer, ForeignKey('user.id'))
-  category=Column(Integer, ForeignKey('category.id'))
-  name=Column(String(25))
-  description=Column(String(75))
-  user=relationship(User)
-  categ=relationship(Category)
+    __tablename__ = 'item'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    category = Column(Integer, ForeignKey('category.id'))
+    name = Column(String(25))
+    description = Column(String(75))
+    user = relationship(User)
+    categ = relationship(Category)
 
-  @property
-  def serialize(self):
-    return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'category': self.category,
-            'name': self.name,
-            'description': self.description,
-            }
+    @property
+    def serialize(self):
+        return {
+                'id': self.id,
+                'user_id': self.user_id,
+                'category': self.category,
+                'name': self.name,
+                'description': self.description,
+                }
 
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)
-
-
