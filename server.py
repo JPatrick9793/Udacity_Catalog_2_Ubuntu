@@ -34,11 +34,12 @@ CLIENT_ID = json.loads(
 # FOR ADMINISTRATIVE PURPOSES ONLY
 # USED TO DELETE USERS FROM USER DB
 # CANNOT LINK TO HERE FROM ANY PAGE
+# USE WITH CURL OR POSTMAN TO MANUALLY DELETE USER
 @app.route('/catalog/users', methods=['GET', 'DELETE'])
 def getUsers():
     users = session.query(User).all()
-    if request.method == 'GET':        
-        return jsonify(users = [i.serialize for i in users])
+    if request.method == 'GET':
+        return jsonify(users=[i.serialize for i in users])
     if request.method == 'DELETE':
         for user in users:
             session.delete(user)
@@ -46,6 +47,7 @@ def getUsers():
         return "EVERYONE DELETED"
 
 
+# MAGIC
 # GANDALF PAGE
 @app.route('/catalog/gandalf')
 def getGandalf():
@@ -320,22 +322,26 @@ def getLogin():
     return render_template('login.html', STATE=state)
 
 
+# route to logout and revoke current user's access token
 @app.route('/gdisconnect')
 def gdisconnect():
+    # Get the access token from current login session
     access_token = login_session.get('access_token')
+    # if no access token
     if access_token is None:
         print 'Access Token is None'
         response = make_response(json.dumps(
             'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-
+    # url build to google to revoke token
     url = ('https://accounts.google.com/o/oauth2/revoke?token=%s'
            % login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-
+    # if google responds with 200 OK:
     if result['status'] == '200':
+        # delete current info for login session[]
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
@@ -343,7 +349,7 @@ def gdisconnect():
         del login_session['picture']
         del login_session['user_id']
         return redirect(url_for('getHome'), code=200)
-
+    # if google returns anything but 200 OK:
     else:
         response = make_response(json.dumps(
             'Failed to revoke token for given user.', 400))
@@ -351,10 +357,10 @@ def gdisconnect():
         return response
 
 
-# logout
+# route to connect with OAuth2.0
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    # Validate state token
+    # Validate state token, if URL arg does not match current state
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -438,8 +444,6 @@ def gconnect():
     output += ' " style = "width: 300px; height: 300px;'
     output += 'border-radius: 150px;-webkit-border-radius: 150px;'
     output += '-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
     return output
 
 
