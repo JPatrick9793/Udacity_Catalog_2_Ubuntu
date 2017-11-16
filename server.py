@@ -58,11 +58,11 @@ def getGandalf():
 @app.route('/')
 def determineHome():
     # if there is a login session
-    if login_session['user_id']:
+    try:
         return redirect(url_for('getHomeLoggedIn',
                                 user_id=login_session['user_id']
                                 ))
-    else:
+    except:
         return redirect(url_for('getHome'))
 
 
