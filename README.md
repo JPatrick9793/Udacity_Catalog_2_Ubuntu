@@ -5,7 +5,7 @@
 
 Using this repository, you can access a client-side website which allows you to create categories, and items for those categories. Categories and assocated Items have CRUD functionality (they can be Created, Read, Updated, and Destroyed). This site uses google OAuth2.0 as a third party authenticator, so you must either create or possess a google account in order to register as a user for this site.
 
-<em>::SETTING UP::</em>
+<b>::::SETTING UP::::</b>
 
 The site should be run using the following configuration:
 <ul>
@@ -20,7 +20,13 @@ $  pip install -Iv Flask==0.9
 <br>
 $  pip install -Iv sqlalchemy==1.1.13
 
-<em>::TO RUN THE PROGRAM::</em>
+**Note: you may need to install certain packages seperately. If you are having trouble running the program, try entering the following commands in the terminal:
+
+$  pip install flask packaging oauth2client redis passlib flask-httpauth
+<br>
+$  pip install sqlalchemy flask-sqlalchemy psycopg2 bleach requests
+
+<b>::::TO RUN THE PROGRAM::::</b>
 <ol>
 <li>Open the terminal and navigate to the catalog_2 folder</li>
 <li>Enter the following command in the prompt line:<br>$  python server.py</li>
