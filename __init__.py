@@ -26,10 +26,10 @@ session = DBSession()
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
-# read OAuth client_secret and client_id from json file
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+app.secret_key = 'something_very_secret'
 
+# read OAuth client_secret and client_id from json file
+CLIENT_ID = json.loads(open('/var/www/Udacity_Catalog_2/client_secrets.json', 'r').read())['web']['client_id']
 
 # FOR ADMINISTRATIVE PURPOSES ONLY
 # USED TO DELETE USERS FROM USER DB
@@ -372,7 +372,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/var/www/Udacity_Catalog_2/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -487,4 +487,5 @@ def getUserInfo(user_id):
 # constructor
 if __name__ == '__main__':
     app.secret_key = 'something_very_secret'
+    app.debug = true
     app.run()
