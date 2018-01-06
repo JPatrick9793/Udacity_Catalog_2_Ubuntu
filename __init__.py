@@ -3,6 +3,7 @@ from flask import request, g, Flask, jsonify, make_response, render_template
 from flask import redirect, url_for, flash
 from flask.ext.httpauth import HTTPBasicAuth
 from flask import session as login_session
+from flask.ext.sqlalchemy import SQLAlchemy
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
