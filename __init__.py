@@ -26,6 +26,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 auth = HTTPBasicAuth()
+db = SQLAlchemy(app)
 
 app.secret_key = 'something_very_secret'
 
