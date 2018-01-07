@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
-from Database import Base, Item, User, Category
+# from Database import Base, Item, User, Category
 
 import httplib2
 import requests
