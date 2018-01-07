@@ -15,12 +15,17 @@ secret_key = ''.join(
 
 # create User table
 class User(db.Model):
+    # name
     __tablename__ = 'user'
+    # columns
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     picture = db.Column(db.String())
     email = db.Column(db.String())
-
+    # Relationships
+    userCategory = db.relationship('Category', backref="user", lazy=True)
+    userItem = db.relationship('Item', backref="user", lazy=True)
+    
     # serialize property to return information in JSON format
     @property
     def serialize(self):
@@ -33,11 +38,14 @@ class User(db.Model):
 
 # create category table
 class Category(db.Model):
+    # name
     __tablename__ = 'category'
+    # columns
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(15))
-    user_id = db.Column(db.Integer, ForeignKey('user.id'))
-    user = db.relationship(User)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # relationships
+    itemCategory = db.relationship('Item', backref='category', lazy=True)
 
     # to return JSON format
     @property
@@ -52,12 +60,10 @@ class Category(db.Model):
 class Item(db.Model):
     __tablename__ = 'item'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'))
-    category = db.Column(db.Integer, ForeignKey('category.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    category = db.Column(db.Integer, db.ForeignKey('category.id'))
     name = db.Column(db.String(25))
     description = db.Column(db.String(75))
-    user = db.relationship(User)
-    categ = db.relationship(Category)
 
     @property
     def serialize(self):
