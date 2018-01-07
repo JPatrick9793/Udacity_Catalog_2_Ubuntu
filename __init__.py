@@ -32,6 +32,7 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 db = SQLAlchemy(app)
 from Udacity_Catalog_2 import Database
+from Database import User, Category, Item
 
 app.secret_key = 'something_very_secret'
 
@@ -487,8 +488,9 @@ def createUser(login_session):
     # print ('new user added to db.session')
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         print ('...there was an exception when commiting to db.session')
+        print (e)
     print ('...newUser has been commited to session')
     # print ('newUser commited, attempting to query user from database')
     # user is queried from table and the ID is returned

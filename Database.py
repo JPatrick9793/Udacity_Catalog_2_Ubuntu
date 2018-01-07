@@ -5,7 +5,7 @@
 # from sqlalchemy.ext.declarative import declarative_base
 # from sqlalchemy.orm import relationship
 # from sqlalchemy import create_engine
-from myproject import db
+from Udacity_Catalog_2 import db
 import random
 import string
 # Base = declarative_base()
@@ -16,7 +16,7 @@ secret_key = ''.join(
 # create User table
 class User(db.Model):
     # name
-    __tablename__ = 'user'
+    # __tablename__ = 'user'
     # columns
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(), index=True)
