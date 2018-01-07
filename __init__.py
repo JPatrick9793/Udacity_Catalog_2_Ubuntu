@@ -41,13 +41,13 @@ CLIENT_ID = json.loads(open('/var/www/Udacity_Catalog_2/client_secrets.json', 'r
 # USE WITH CURL OR POSTMAN TO MANUALLY DELETE USER
 @app.route('/catalog/users', methods=['GET', 'DELETE'])
 def getUsers():
-    users = session.query(User).all()
+    users = Database.User.query.all()
     if request.method == 'GET':
         return jsonify(users=[i.serialize for i in users])
     if request.method == 'DELETE':
         for user in users:
-            session.delete(user)
-            session.commit()
+            db.session.delete(user)
+            db.session.commit()
         return "EVERYONE DELETED"
 
 
@@ -81,11 +81,11 @@ def getHome():
 # app route for homepage if logged in
 @app.route('/catalog/<int:user_id>')
 def getHomeLoggedIn(user_id):
-    users = session.query(User).all()
+    users = Database.User.query.all()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
-    categories = session.query(Category).filter_by(user_id=user_id).all()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
     return render_template(
                           'homepage.html',
                           categories=categories,
@@ -101,12 +101,12 @@ def getCreateCategory(user_id):
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
     # query user from db
-    user = session.query(User).filter_by(id=login_session['user_id'])
+    user = Database.User.query.filter_by(id=login_session['user_id'])
     newCategory = Category(
         name=request.form['name'],
         user_id=login_session['user_id'])
-    session.add(newCategory)
-    session.commit()
+    db.session.add(newCategory)
+    db.session.commit()
     return redirect(url_for('getItems',
                             user_id=login_session['user_id'],
                             category_id=newCategory.id))
@@ -116,10 +116,10 @@ def getCreateCategory(user_id):
 @app.route('/catalog/<int:user_id>/<int:category_id>/edit',
            methods=['GET', 'POST'])
 def getCategoryEdit(user_id, category_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -143,10 +143,10 @@ def getCategoryEdit(user_id, category_id):
 @app.route('/catalog/<int:user_id>/<int:category_id>/delete',
            methods=['GET', 'POST'])
 def getCategoryDelete(user_id, category_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -159,19 +159,19 @@ def getCategoryDelete(user_id, category_id):
                                cat=category)
     if request.method == 'POST':
         for i in items:
-            session.delete(i)
-            session.commit()
-        session.delete(category)
+            db.session.delete(i)
+            db.session.commit()
+        db.session.delete(category)
         return redirect(url_for('determineHome'))
 
 
 # page showing all items in a given category
 @app.route('/catalog/<int:user_id>/<int:category_id>')
 def getItems(user_id, category_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -188,8 +188,8 @@ def getItems(user_id, category_id):
 # return json of all items within category
 @app.route('/catalog/<int:user_id>/<int:category_id>/json')
 def getCategoryJSON(user_id, category_id):
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -203,16 +203,16 @@ def getCreateItem(user_id, category_id):
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
     # else, create a new item
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
     newItem = Item(name=request.form['name'],
                    description=request.form['description'],
                    user_id=login_session['user_id'],
                    category=category_id)
-    session.add(newItem)
-    session.commit()
+    db.session.add(newItem)
+    db.session.commit()
     return redirect(url_for('getItemInfo',
                             user_id=user_id,
                             category_id=category_id,
@@ -222,11 +222,11 @@ def getCreateItem(user_id, category_id):
 # clicking on the aside item link will bring up the info box on the right
 @app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>')
 def getItemInfo(user_id, category_id, item_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
-    selectedItem = session.query(Item).filter_by(id=item_id).one()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
+    selectedItem = Database.Item.query.filter_by(id=item_id).one()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -245,11 +245,11 @@ def getItemInfo(user_id, category_id, item_id):
 @app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def getItemEdit(user_id, category_id, item_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
-    selectedItem = session.query(Item).filter_by(id=item_id).one()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
+    selectedItem = Database.Item.query.filter_by(id=item_id).one()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -268,7 +268,7 @@ def getItemEdit(user_id, category_id, item_id):
             selectedItem.name = request.form['name']
         if request.form['description']:
             selectedItem.description = request.form['description']
-        session.commit()
+        db.session.commit()
         return redirect(url_for('getItemInfo',
                                 user_id=user_id,
                                 category_id=category_id,
@@ -279,11 +279,11 @@ def getItemEdit(user_id, category_id, item_id):
 @app.route('/catalog/<int:user_id>/<int:category_id>/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def getItemDelete(user_id, category_id, item_id):
-    users = session.query(User).all()
-    items = session.query(Item).filter_by(category=category_id).all()
-    category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).filter_by(user_id=user_id).all()
-    selectedItem = session.query(Item).filter_by(id=item_id).one()
+    users = Database.User.query.all()
+    items = Database.Item.query.filter_by(category=category_id).all()
+    category = Database.Category.query.filter_by(id=category_id).one()
+    categories = Database.Category.query.filter_by(user_id=user_id).all()
+    selectedItem = Database.Item.query.filter_by(id=item_id).one()
     # Login user can only access his/her own information
     if user_id != login_session['user_id']:
         return redirect(url_for('getGandalf'))
@@ -298,8 +298,8 @@ def getItemDelete(user_id, category_id, item_id):
                               selectedItem=selectedItem,
                               )
     if request.method == 'POST':
-        session.delete(selectedItem)
-        session.commit()
+        db.session.delete(selectedItem)
+        db.session.commit()
         return redirect(url_for('getItems',
                                 user_id=user_id,
                                 category_id=category_id,
@@ -459,7 +459,7 @@ def gconnect():
 def getUserID(email):
     # if the email exists within the table, return the associated ID
     try:
-        user = session.query(User).filter_by(email=email).one()
+        user = Database.User.query.filter_by(email=email).one()
         return user.id
     # else return None
     except:
@@ -474,17 +474,17 @@ def createUser(login_session):
                    picture=login_session['picture']
                    )
     # user is added to table
-    session.add(newUser)
-    session.commit()
+    db.session.add(newUser)
+    db.session.commit()
     # user is queried from table and the ID is returned
-    user = session.query(User).filter_by(email=login_session['email']).one()
+    user = Database.User.query.filter_by(email=login_session['email']).one()
     return user.id
 
 
 # function that queries the User table
 # using the ID and returns the object
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
+    user = Database.User.query.filter_by(id=user_id).one()
     return user
 
 
