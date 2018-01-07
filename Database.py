@@ -15,7 +15,7 @@ secret_key = ''.join(
 
 # create User table
 class User(db.Model):
-    # __tablename__ = 'user'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     picture = db.Column(db.String())
