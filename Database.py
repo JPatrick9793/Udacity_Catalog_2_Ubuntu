@@ -1,24 +1,25 @@
 #! --shebang
 # DB FILE FOR CATALOG PROJECT
-import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+# import sys
+# from sqlalchemy import Column, ForeignKey, Integer, String
+# from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.orm import relationship
+# from sqlalchemy import create_engine
+from myproject import db
 import random
 import string
-Base = declarative_base()
+# Base = declarative_base()
 secret_key = ''.join(
     random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
 
 
 # create User table
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(32), index=True)
-    picture = Column(String)
-    email = Column(String)
+class User(db.Model):
+    # __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), index=True)
+    picture = db.Column(db.String())
+    email = db.Column(db.String())
 
     # serialize property to return information in JSON format
     @property
@@ -31,12 +32,12 @@ class User(Base):
 
 
 # create category table
-class Category(Base):
+class Category(db.Model):
     __tablename__ = 'category'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(15))
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(15))
+    user_id = db.Column(db.Integer, ForeignKey('user.id'))
+    user = db.relationship(User)
 
     # to return JSON format
     @property
@@ -48,15 +49,15 @@ class Category(Base):
 
 
 # create item table
-class Item(Base):
+class Item(db.Model):
     __tablename__ = 'item'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    category = Column(Integer, ForeignKey('category.id'))
-    name = Column(String(25))
-    description = Column(String(75))
-    user = relationship(User)
-    categ = relationship(Category)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'))
+    category = db.Column(db.Integer, ForeignKey('category.id'))
+    name = db.Column(db.String(25))
+    description = db.Column(db.String(75))
+    user = db.relationship(User)
+    categ = db.relationship(Category)
 
     @property
     def serialize(self):
@@ -69,5 +70,7 @@ class Item(Base):
                 }
 
 
-engine = create_engine('sqlite:///catalog.db')
-Base.metadata.create_all(engine)
+# engine = create_engine('sqlite:///catalog.db')
+# Base.metadata.create_all(engine)
+
+db.create_all()
