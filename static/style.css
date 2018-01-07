@@ -90,6 +90,10 @@ a.aside_link:hover {
   width: 90%;
 }
 
+aside input {
+  width: 90%;
+}
+
 .body_container {
   display: flex;
   flex-direction: column;
