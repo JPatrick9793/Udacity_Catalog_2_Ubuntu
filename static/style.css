@@ -87,6 +87,7 @@ a.aside_link:hover {
 
 .aside_item {
   text-align: center;
+  width: 90%;
 }
 
 .body_container {
