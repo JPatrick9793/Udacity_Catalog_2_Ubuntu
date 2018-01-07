@@ -20,13 +20,15 @@ import json
 import random
 import string
 
-engine = create_engine('sqlite:///catalog.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-app = Flask(__name__)
+# engine = create_engine('sqlite:///catalog.db')
+# Base.metadata.bind = engine
+# DBSession = sessionmaker(bind=engine)
+# session = DBSession()
 auth = HTTPBasicAuth()
+
+app = Flask(__name__)
 db = SQLAlchemy(app)
+from Udacity_Catalog_2 import Database
 
 app.secret_key = 'something_very_secret'
 
