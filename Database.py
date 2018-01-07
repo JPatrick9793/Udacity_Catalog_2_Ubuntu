@@ -19,13 +19,13 @@ class User(db.Model):
     __tablename__ = 'user'
     # columns
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), index=True)
+    username = db.Column(db.String(), index=True)
     picture = db.Column(db.String())
     email = db.Column(db.String())
     # Relationships
-    userCategory = db.relationship('Category', backref="user", lazy=True)
-    userItem = db.relationship('Item', backref="user", lazy=True)
-    
+    # userCategory = db.relationship('Category', backref='user', lazy=True)
+    # userItem = db.relationship('Item', backref='user', lazy=True)
+
     # serialize property to return information in JSON format
     @property
     def serialize(self):
@@ -43,9 +43,10 @@ class Category(db.Model):
     # columns
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(15))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # relationships
-    itemCategory = db.relationship('Item', backref='category', lazy=True)
+    # itemCategory = db.relationship('Item', backref='category', lazy=True)
+    userCategory = db.relationship('User')
 
     # to return JSON format
     @property
@@ -58,12 +59,17 @@ class Category(db.Model):
 
 # create item table
 class Item(db.Model):
+    # name
     __tablename__ = 'item'
+    # columns
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    category = db.Column(db.Integer, db.ForeignKey('category.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    category = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     name = db.Column(db.String(25))
     description = db.Column(db.String(75))
+    # relationships
+    itemUser = db.relationship('User')
+    itemCategory = db.relationship('Category')
 
     @property
     def serialize(self):

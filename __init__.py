@@ -1,13 +1,16 @@
 #! --shebang
+
+import os
+
 from flask import request, g, Flask, jsonify, make_response, render_template
 from flask import redirect, url_for, flash
 from flask.ext.httpauth import HTTPBasicAuth
 from flask import session as login_session
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
+# from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.orm import relationship, sessionmaker, scoped_session
+# from sqlalchemy import create_engine
 
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -61,12 +64,14 @@ def getGandalf():
 # app route for the homepage
 @app.route('/')
 def determineHome():
+    print ('determineHome was called')
     # if there is a login session
     try:
         return redirect(url_for('getHomeLoggedIn',
                                 user_id=login_session['user_id']
                                 ))
     except:
+        print ('...there was an exception... no login_session[]?')
         return redirect(url_for('getHome'))
 
 
@@ -366,6 +371,7 @@ def gdisconnect():
 # route to connect with OAuth2.0
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    print ('gconnect was called')
     # Validate state token, if URL arg does not match current state
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -392,10 +398,10 @@ def gconnect():
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
     # If there was an error in the access token info, abort.
-    # if result.get('error') is not None:
-    #     response = make_response(json.dumps(result.get('error')), 500)
-    #     response.headers['Content-Type'] = 'application/json'
-    #     return response
+    if result.get('error') is not None:
+        response = make_response(json.dumps(result.get('error')), 500)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
@@ -431,7 +437,7 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-
+    print ('data: ', data)
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -468,16 +474,27 @@ def getUserID(email):
 
 # function to create a new User
 def createUser(login_session):
-    newUser = User(
-                   username=login_session['username'],
-                   email=login_session['email'],
-                   picture=login_session['picture']
-                   )
+    # print ('creating user object')
+    # print ('login_session:', login_session)
+    newUser = Database.User(username=login_session['username'],
+                            picture=login_session['picture'],
+                            email=login_session['email'])
+    print ('newUser was created')
+    # print ('newUser created: ', newUser)
     # user is added to table
     db.session.add(newUser)
-    db.session.commit()
+    print ('... added newUser to session')
+    # print ('new user added to db.session')
+    try:
+        db.session.commit()
+    except:
+        print ('...there was an exception when commiting to db.session')
+    print ('...newUser has been commited to session')
+    # print ('newUser commited, attempting to query user from database')
     # user is queried from table and the ID is returned
     user = Database.User.query.filter_by(email=login_session['email']).one()
+    # print ('user has successfully been queried')
+    # id = getUserID(login_session['email'])
     return user.id
 
 
